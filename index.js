@@ -22,9 +22,11 @@ const {
 } = require("chalk");
 const lofy = require("./lofy.json");
 const Everyone = lofy.Everyone;
-const nome_canal_mp = lofy.nome_canal_mp;
+const nome_canal = lofy.nome_canal;
+const nome_cargo = lofy.nome_cargo;
 const criar_cargos = lofy.criar_cargos;
 const emoji_menu = lofy.emoji_menu;
+const mensagem_dm = lofy.mensagem_dm;
 const status_da_twitch = lofy.status_da_twitch;
 const criar_canais = lofy.criar_canais;
 const nome_do_servidor = lofy.nome_do_servidor;
@@ -63,7 +65,6 @@ client.on("ready", () => {
     
 
 
-
        ██╗      ██████╗ ███████╗██╗   ██╗    ███╗   ██╗██╗   ██╗██╗  ██╗███████╗██████╗ 
        ██║     ██╔═══██╗██╔════╝╚██╗ ██╔╝    ████╗  ██║██║   ██║██║ ██╔╝██╔════╝██╔══██╗
        ██║     ██║   ██║█████╗   ╚████╔╝     ██╔██╗ ██║██║   ██║█████╔╝ █████╗  ██████╔╝
@@ -84,7 +85,6 @@ client.on("ready", () => {
   console.log(greenBright(`    Prefixo > ${prefix}`));
   console.log(greenBright(`    Everyone Ativo > ${Everyone}`));
   console.log(greenBright(`    Permissão Necessária > ADMINISTRATOR`));
-
   console.log(
     greenBright(`\n    Estou em ${client.guilds.cache.size} servidores`)
   );
@@ -113,9 +113,9 @@ client.on("message", async message => {
           .setTitle("Commands Nuker")
           .setDescription(
             `
-                    **${emoji_menu} Criar Varios canais:** \`${prefix}cc\` [texto]
-                    **${emoji_menu} Cria Varios canais e marca todos com uma mensagem:** \`${prefix}mp\` [texto]
-                    **${emoji_menu} Criar Varios cargos:** \`${prefix}mr\` [texto]
+                    **${emoji_menu} Criar Varios canais:** \`${prefix}cc\`
+                    **${emoji_menu} Cria Varios canais e marca todos com uma mensagem:** \`${prefix}mp\`
+                    **${emoji_menu} Criar Varios cargos:** \`${prefix}mr\`
                     **${emoji_menu} Deleta todos os canais:** \`${prefix}delcc\`
                     **${emoji_menu} Deleta todos os cargos:** \`${prefix}delrole\`
                     **${emoji_menu} Bane todos os membros:** \`${prefix}banall\`
@@ -167,25 +167,19 @@ client.on("message", async message => {
           );
           return message.reply("Você não pode utilizar este comando!");
         } else {
-          let args = message.content.split(" ").slice(1);
-          var argresult = args.join(" ");
         }
-        const ch = args[0];
-        if (!ch)
-          return message.reply(
-            `     [!] Argumento faltandot **${prefix}ch <nome>**`
-          );
 
         message.delete();
         console.log(yellow("    [Lofy] Criando Canais"));
         for (var i = 0; i < criar_canais; i++) {
-          message.guild.channels.create(ch);
+          message.guild.channels.create(nome_canal);
         }
       }
     }
 
     /// Cria canais e marca @everyone
 
+    message.delete();
     if (message.content.startsWith(prefix + "mp")) {
       if (!message.guild.me.hasPermission("ADMINISTRATOR")) {
         return console.log(red("    [Lofy] O bot esta sem permição"));
@@ -196,33 +190,30 @@ client.on("message", async message => {
           );
           return message.reply("Você não pode utilizar este comando!");
         } else {
-          let args = message.content.split(" ").slice(1);
-          var argresult = args.join(" ");
-          if (!argresult) {
             console.log(
               blueBright(`    [Lofy] Marcando e postando umas coisas`)
             );
-            for (var i = 0; i < marcação; i++) {
-              message.guild.channels.create("Derrubado-por");
+            for (var i = 0; i < criar_canais; i++) {
+              message.guild.channels.create(nome_canal);
 
-              for (var i = 0; i < marcação; i++) {
-                let channels = message.guild.channels.create("Derrubado-por");
+              for (var i = 0; i < criar_canais; i++) {
+                let channels = message.guild.channels.create(nome_canal);
 
                 channels.then(function (channel, index) {
-                  for (var i = 0; i < marcação; i++) {
-                    channel.send("@everyone " + argresult);
+                  for (var i = 0; i < criar_canais; i++) {
+                    channel.send("@everyone " + marcação);
                   }
                 });
               }
             }
           }
-          console.log("    [Lofy] Marcando e criado canais".red);
-          for (var i = 0; i < marcação; i++) {
-            let channels = message.guild.channels.create(nome_canal_mp);
+          console.log("    [Lofy] Marcando e criando canais".red);
+          for (var i = 0; i < criar_canais; i++) {
+            let channels = message.guild.channels.create(nome_canal);
 
             channels.then(function (channel, index) {
-              for (var i = 0; i < marcação; i++) {
-                channel.send("@everyone " + argresult);
+              for (var i = 0; i < criar_canais; i++) {
+                channel.send("@everyone " + marcação);
               }
             });
           }
@@ -241,18 +232,12 @@ client.on("message", async message => {
       if (!message.guild.me.permissions.has("MANAGE_ROLES")) {
         return message.reply("Você não poder utilizar este comando!");
       } else {
-        const role = args[0];
-        if (!role)
-          return message.reply(
-            `Argumento faltando **${prefix}mr <nome do cargo>**`
-          );
-
         message.delete();
         console.log("    [Lofy] Criando cargos".green);
         for (var i = 0; i < criar_cargos; i++) {
           message.guild.roles
             .create({
-              name: `${role}`,
+              name: `${nome_cargo}`,
               color: "RANDOM",
               reason: "Nuked by LofyGang"
             })
@@ -300,7 +285,7 @@ client.on("message", async message => {
       }
     }
 
-    ///Deleta todos os cargos do servidor
+    /// Deleta todos os cargos do servidor
 
     if (message.content.startsWith(prefix + "delrole")) {
       if (message.author.id != myID) {
@@ -318,7 +303,7 @@ client.on("message", async message => {
       });
     }
 
-    ///Bane todos do servidor
+    /// Bane todos do servidor
 
     if (message.content.startsWith(prefix + "banall")) {
       if (message.author.id != myID) {
@@ -346,7 +331,7 @@ client.on("message", async message => {
       }
     }
 
-    /// mass dm
+    /// Mass Dm
 
     if (message.content.startsWith(prefix + "dmall")) {
       if (message.author.id != myID) {
@@ -356,12 +341,9 @@ client.on("message", async message => {
 
       console.log("    [Lofy] Enviando mensagem no privado de todos".blue);
       if (message.author.id !== myID) return;
-      const msg = args[0];
-      if (!msg)
-        return message.reply("Especifique a mensagem que deseja enviar");
       message.guild.members.cache.forEach(member => {
         member
-          .send(msg)
+          .send(mensagem_dm)
           .then(
             console.log(
               green(`    [Lofy] Mensagem enviada para ${member.user.tag}`)
@@ -374,8 +356,7 @@ client.on("message", async message => {
           );
       });
     }
-  }
-});
+  });
 
 client.login(token).catch(err => {
   console.log(``.red);
