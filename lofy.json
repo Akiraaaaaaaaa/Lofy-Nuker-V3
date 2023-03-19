@@ -6,7 +6,9 @@
     "Everyone": true,
     "marcação" : "https://discord.gg/lofygang",
     "emoji_menu": "", 
-    "nome_canal_mp": "lofygang",
+    "mensagem_dm": "https://discord.gg/lofygang", 
+    "nome_canal": "lofygang",
+    "nome_cargo": "LofyGang",
     "criar_canais": "50",
     "criar_cargos": "50"
 }
