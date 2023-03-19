@@ -41,7 +41,7 @@ e em seguida abra `[2] Ligar.bat`
  
  Pronto, agora só executar `{prefix}help` e começar a usar!
  
- <img style="border-radius: 15px; display: block; margin-left: auto; margin-right: auto; margin-bottom:20px;" width="70%" src="https://cdn.discordapp.com/attachments/1086754802156961945/1086810221038551122/image.png"></img>
+ <img style="border-radius: 15px; display: block; margin-left: auto; margin-right: auto; margin-bottom:20px;" width="70%" src="https://cdn.discordapp.com/attachments/1062903395041677343/1087093311296249926/image.png"></img>
 
  <hr style="border-radius: 2%; margin-top: 60px; margin-bottom: 60px;" noshade="" size="20" width="100%">
  
