@@ -1,4 +1,4 @@
-const { Client, Collection, GatewayIntentBits, Partials, ActivityType } = require("discord.js");
+const { Client, Collection, GatewayIntentBits, Partials, ActivityType, EmbedBuilder, Permissions } = require("discord.js");
 const fs = require("fs");
 const axios = require("axios").default;
 const client = new Client({
