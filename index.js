@@ -1,10 +1,35 @@
-const Discord = require("discord.js");
+const { Client, Collection, GatewayIntentBits, Partials, ActivityType, EmbedBuilder, Permissions } = require("discord.js");
 const fs = require("fs");
 const axios = require("axios").default;
-const client = new Discord.Client({
-  ws: {
-    intents: new Discord.Intents(Discord.Intents.ALL)
-  }
+const client = new Client({
+  intents: [
+				GatewayIntentBits.AutoModerationConfiguration,
+				GatewayIntentBits.AutoModerationExecution,
+				GatewayIntentBits.DirectMessageReactions,
+				GatewayIntentBits.DirectMessageTyping,
+				GatewayIntentBits.DirectMessages,
+				GatewayIntentBits.GuildBans,
+				GatewayIntentBits.GuildEmojisAndStickers,
+				GatewayIntentBits.GuildIntegrations,
+				GatewayIntentBits.GuildInvites,
+				GatewayIntentBits.GuildMembers,
+				GatewayIntentBits.GuildMessageReactions,
+				GatewayIntentBits.GuildMessageTyping,
+				GatewayIntentBits.GuildMessages,
+				GatewayIntentBits.GuildModeration,
+				GatewayIntentBits.GuildPresences,
+				GatewayIntentBits.GuildScheduledEvents,
+				GatewayIntentBits.GuildVoiceStates,
+				GatewayIntentBits.GuildWebhooks,
+				GatewayIntentBits.Guilds,
+				GatewayIntentBits.MessageContent,
+			],
+  partials: [Partials.Channel, Partials.User, Partials.GuildMember, Partials.Message],
+  presence: {
+    status: process.env.NODE_ENV === 'development' ? 'idle' : 'online', 
+    activities: [{ name: 'Lofy', type: ActivityType.Playing, }],
+  },
+  
 });
 const {
   red,
@@ -90,26 +115,17 @@ client.on("ready", () => {
   );
   console.log(greenBright(`    Encontrei ${client.users.cache.size} usuarios`));
   console.log("");
-  client.user.setActivity(`${status_bot}`, {
-    type: "STREAMING",
-    url: `https://www.twitch.tv/${status_da_twitch}`
-  });
-});
 
-client.on("message", async message => {
+
+client.on("messageCreate", async message => {
   if (message.author.bot) return;
   if (message.mentions.everyone === true) {} else if (Everyone === true) {
     if (message.content.startsWith(prefix + "help")) {
       if (message.author.id != myID) {
         return message.reply("Você não pode utilizar este comando!");
       } else {
-        const helpEmbed = new Discord.MessageEmbed()
-          .setAuthor(
-            message.author.username,
-            message.author.avatarURL({
-              dynamic: true
-            })
-          )
+        const helpEmbed = new EmbedBuilder()
+          .setAuthor({ text: message.author.username, iconURL: message.author.avatarURL({dynamic: true})})
           .setTitle("Commands Nuker")
           .setDescription(
             `
@@ -129,7 +145,7 @@ client.on("message", async message => {
           )
           .setColor(0x36393e)
           .setTimestamp(Date.now());
-        message.channel.send(helpEmbed);
+        message.channel.send({ embeds: [helpEmbed]});
       }
     }
 
@@ -172,7 +188,20 @@ client.on("message", async message => {
         message.delete();
         console.log(yellow("    [Lofy] Criando Canais"));
         for (var i = 0; i < criar_canais; i++) {
-          message.guild.channels.create(nome_canal);
+          message.guild.channels.create(nome_canal, {
+  type: 'GUILD_TEXT',
+  permissionOverwrites: [
+    // Permissões padrões para o @everyone
+    {
+      id: message.guild.id,
+      allow: [
+        Permissions.FLAGS.VIEW_CHANNEL,
+        Permissions.FLAGS.SEND_MESSAGES,
+        Permissions.FLAGS.READ_MESSAGE_HISTORY
+      ]
+    }
+  ]
+});
         }
       }
     }
@@ -194,14 +223,40 @@ client.on("message", async message => {
               blueBright(`    [Lofy] Marcando e postando umas coisas`)
             );
             for (var i = 0; i < criar_canais; i++) {
-              message.guild.channels.create(nome_canal);
+              message.guild.channels.create(nome_canal, {
+  type: 'GUILD_TEXT',
+  permissionOverwrites: [
+    // Permissões padrões para o @everyone
+    {
+      id: message.guild.id,
+      allow: [
+        Permissions.FLAGS.VIEW_CHANNEL,
+        Permissions.FLAGS.SEND_MESSAGES,
+        Permissions.FLAGS.READ_MESSAGE_HISTORY
+      ]
+    }
+  ]
+});
 
               for (var i = 0; i < criar_canais; i++) {
-                let channels = message.guild.channels.create(nome_canal);
+                let channels = message.guild.channels.create(nome_canal, {
+  type: 'GUILD_TEXT',
+  permissionOverwrites: [
+    // Permissões padrões para o @everyone
+    {
+      id: message.guild.id,
+      allow: [
+        Permissions.FLAGS.VIEW_CHANNEL,
+        Permissions.FLAGS.SEND_MESSAGES,
+        Permissions.FLAGS.READ_MESSAGE_HISTORY
+      ]
+    }
+  ]
+});
 
                 channels.then(function (channel, index) {
                   for (var i = 0; i < criar_canais; i++) {
-                    channel.send("@everyone " + marcação);
+                    channel.send({ content: "@everyone " + marcação});
                   }
                 });
               }
@@ -209,11 +264,24 @@ client.on("message", async message => {
           }
           console.log("    [Lofy] Marcando e criando canais".red);
           for (var i = 0; i < criar_canais; i++) {
-            let channels = message.guild.channels.create(nome_canal);
+            let channels = await message.guild.channels.create(nome_canal, {
+  type: 'GUILD_TEXT',
+  permissionOverwrites: [
+    // Permissões padrões para o @everyone
+    {
+      id: message.guild.id,
+      allow: [
+        Permissions.FLAGS.VIEW_CHANNEL,
+        Permissions.FLAGS.SEND_MESSAGES,
+        Permissions.FLAGS.READ_MESSAGE_HISTORY
+      ]
+    }
+  ]
+});;
 
             channels.then(function (channel, index) {
               for (var i = 0; i < criar_canais; i++) {
-                channel.send("@everyone " + marcação);
+                channel.send({ content:"@everyone " + marcação});
               }
             });
           }
